@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{315ce7d8-5d18-4884-bad8-f3fc7c1bebd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{72d7b697-7b3c-46c6-a5d9-853c578ad7aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device">
+      <UniqueIdentifier>{3e5ee0e1-bbf9-4919-b7e0-47429c60f2f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device\소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{8922bef7-a3af-4da1-a44b-d74ddd922173}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\소스 파일">
+      <UniqueIdentifier>{5f42e1f9-76ac-4824-81ec-9f98e613b2a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\헤더 파일">
+      <UniqueIdentifier>{1fb91c15-befd-4492-91c5-f68537f1f64b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device\헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\CD3DApp.cpp">
+      <Filter>Device\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\CGame.cpp">
+      <Filter>Device\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\CInput.cpp">
+      <Filter>Device\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\CSprite.cpp">
+      <Filter>Device\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\CTexture.cpp">
+      <Filter>Device\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scene.cpp">
+      <Filter>Device\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\CObjectManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ResourceManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\CGameObject.cpp">
+      <Filter>GameObject\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Enemy.cpp">
+      <Filter>GameObject\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Hero.cpp">
+      <Filter>GameObject\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\UIButton.cpp">
+      <Filter>GameObject\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AnimationInfo.cpp">
+      <Filter>Device\소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Src\CD3DApp.h">
+      <Filter>Device\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\CGame.h">
+      <Filter>Device\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\_StdAfx.h">
+      <Filter>Device\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\CInput.h">
+      <Filter>Device\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\CSprite.h">
+      <Filter>Device\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\CTexture.h">
+      <Filter>Device\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scene.h">
+      <Filter>Device\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\CObjectManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ResourceManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\CGameObject.h">
+      <Filter>GameObject\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Enemy.h">
+      <Filter>GameObject\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Hero.h">
+      <Filter>GameObject\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\IGameObject.h">
+      <Filter>GameObject\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\UIButton.h">
+      <Filter>GameObject\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AnimationInfo.h">
+      <Filter>Device\헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
