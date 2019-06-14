@@ -124,6 +124,11 @@ int CD3DApp::Create(HINSTANCE hInst)
 	UpdateWindow(m_hWnd);
 	::ShowCursor(m_bShowCusor);
 
+	// 윈속 초기화
+	WSADATA wsa;
+	if(WSAStartup(MAKEWORD(2,2), &wsa) != 0) return 1;
+
+
 	if (FAILED(DataLoading()))
 		return -1;
 

@@ -31,6 +31,7 @@ CInput::CInput(void)
 CInput::~CInput(void)
 {
 }
+
 INT	CInput::Create(HWND hWnd)
 {
 	m_hWnd = hWnd;

@@ -12,7 +12,7 @@ Hero::Hero(LPCWSTR sFile, D3DXVECTOR2 _pos)
 {
 	//Hero();
 	m_Stat = HERO;
-	m_Scale = { .3f, .3f };
+	m_Scale = { .2f, .2f };
 	dx = 200;
 	dy = 400;
 	Create(sFile, _pos);

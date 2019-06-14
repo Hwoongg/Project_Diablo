@@ -31,6 +31,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Server">
+      <UniqueIdentifier>{caf6752d-2b76-44f0-8726-20e63706a356}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\CD3DApp.cpp">
@@ -74,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="Src\AnimationInfo.cpp">
       <Filter>Device\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Server.cpp">
+      <Filter>Server</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="Src\AnimationInfo.h">
       <Filter>Device\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Server.h">
+      <Filter>Server</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

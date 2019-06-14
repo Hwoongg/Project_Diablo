@@ -1,8 +1,10 @@
 #include "_StdAfx.h"
 
-
 extern CD3DApp* g_pApp;
 extern Scene* g_pNowOpened;
+extern volatile BOOL g_bStart;
+extern u_short g_port;
+extern HANDLE g_hClientThread;
 
 Scene::Scene()
 {
@@ -12,6 +14,7 @@ Scene::Scene()
 
 Scene::~Scene()
 {
+
 }
 
 void Scene::Open()
@@ -35,13 +38,13 @@ void Scene::Render()
 
 void Scene::Command(CGameObject * pButton)
 {
+
 }
 
 
 
 MainScene::MainScene()
 {
-	//AddObject(HERO, /*m_pCTx_Zergling*/L"Texture/zerg.png", 0.f, 0.f);
 	D3DXVECTOR2 tempPos;
 	tempPos.x = 0.f;
 	tempPos.y = 0.f;
@@ -49,30 +52,23 @@ MainScene::MainScene()
 	AddObject(m_Hero);
 
 	
-
-	/*AddObject(ENEMY, L"Texture/zealot.png",
-		g_pApp->m_dScnX / 4 * 1 - (g_pApp->GetrManager()->GetTexture(L"Texture/zealot.png")->GetImageWidth() *.2f / 2), 0.f);*/
-	tempPos.x = g_pApp->m_dScnX / 4 * 1 - (g_pApp->GetrManager()->GetTexture(L"Texture/zealot.png")->GetImageWidth() *.2f / 2);
-	//CGameObject* temp = new Enemy(L"Texture/zealot.png", tempPos);
+	// Enemy 생성부
+	/*tempPos.x = g_pApp->m_dScnX / 4 * 1 - (g_pApp->GetrManager()->GetTexture(L"Texture/zealot.png")->GetImageWidth() *.2f / 2);
 	CGameObject* temp = new Enemy(L"Texture/enemy1.png", tempPos);
 	AddObject(temp);
 	m_CollisionManager.AddObject(temp);
 
 
-	/*AddObject(ENEMY, L"Texture/zealot.png",
-		g_pApp->m_dScnX / 4 * 2 - (g_pApp->GetrManager()->GetTexture(L"Texture/zealot.png")->GetImageWidth() *.2f / 2), 0.f);*/
 	tempPos.x = g_pApp->m_dScnX / 4 * 2 - (g_pApp->GetrManager()->GetTexture(L"Texture/zealot.png")->GetImageWidth() *.2f / 2);
 	temp = new Enemy(L"Texture/enemy1.png", tempPos);
 	AddObject(temp);
 	m_CollisionManager.AddObject(temp);
 
 
-	/*AddObject(ENEMY, L"Texture/zealot.png",
-		g_pApp->m_dScnX / 4 * 3 - (g_pApp->GetrManager()->GetTexture(L"Texture/zealot.png")->GetImageWidth() *.2f / 2), 0.f);*/
 	tempPos.x = g_pApp->m_dScnX / 4 * 3 - (g_pApp->GetrManager()->GetTexture(L"Texture/zealot.png")->GetImageWidth() *.2f / 2);
 	temp = new Enemy(L"Texture/enemy1.png", tempPos);
 	AddObject(temp);
-	m_CollisionManager.AddObject(temp);
+	m_CollisionManager.AddObject(temp);*/
 
 }
 
@@ -94,8 +90,7 @@ void MainScene::Update(CInput * _Input, float _dTime)
 
 TitleScene::TitleScene()
 {
-	//AddObject(UNKNOWN, L"Texture/start.png", g_pApp->m_dScnX / 2, g_pApp->m_dScnY / 2 - 100);
-	//AddObject(UNKNOWN, L"Texture/exit.png", g_pApp->m_dScnX / 2, g_pApp->m_dScnY / 2 + 100);
+	
 	D3DXVECTOR2 tempPos;
 	tempPos.x = g_pApp->m_dScnX / 2 - 200;
 	tempPos.y = g_pApp->m_dScnY / 2 - 100;
@@ -117,8 +112,25 @@ void TitleScene::Update(CInput * _Input, float _dTime)
 
 void TitleScene::Command(CGameObject * pButton)
 {
+	// 스타트 버튼 눌렸을 때
 	if (pButton == m_btnStart)
 	{
+		
+		g_port = SERVERPORT; // 서버 포트 설정
+		
+		// 소켓 통신 스레드 시작
+		g_hClientThread = CreateThread(NULL, 0, ClientMain, NULL, 0, NULL);
+		if (g_hClientThread == NULL) 
+		{
+			MessageBox(g_pApp->m_hWnd, L"클라이언트를 시작할 수 없습니다."
+				"\r\n프로그램을 종료합니다.", L"실패!", MB_ICONERROR);
+			EndDialog(g_pApp->m_hWnd, 0);
+		}
+		else 
+		{
+			while (g_bStart == FALSE); // 서버 접속 성공 기다림
+		}
+		
 		Scene* tempScene = new MainScene();
 		tempScene->Open();
 	}
@@ -128,3 +140,5 @@ void TitleScene::Command(CGameObject * pButton)
 		PostQuitMessage(0);
 	}
 }
+
+

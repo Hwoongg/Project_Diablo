@@ -95,10 +95,6 @@ void CGameObject::Update(CInput* pInput, float _dTime)
 
 void CGameObject::Draw(/*CSprite * pCSpr*/)
 {
-	//pCSpr->Draw(m_pObjTex->GetTexture(), &m_TexRt, &m_Scale, NULL, NULL, &m_Pos, m_Color);
-
-	//g_pApp->GetSprite()->Draw(m_pObjTex->GetTexture(), &m_TexRt, &m_Scale, NULL, NULL, &m_Pos, m_Color);
-
 	// 이제부턴 그릴 위치가 m_TexRt(텍스쳐 전체 크기) 가 아닌 
 	// 그려질 일부분을 AniInfo로 부터 얻어서 그릴것
 	RECT drawRt = m_aniInfo.GetSrcRect();
