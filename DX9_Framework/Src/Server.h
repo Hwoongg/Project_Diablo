@@ -6,35 +6,6 @@
 
 #define SERVERIPV4  "127.0.0.1"
 #define SERVERPORT  9000
-#define BUFSIZE     256                    // 전송 메시지 전체 크기
-#define MSGSIZE     (BUFSIZE-sizeof(int))  // 채팅 메시지 최대 길이
-
-#define PLAYERKEY 1000
-#define MOVING 1001
-
-// 공통 메시지 형식
-// sizeof(COMM_MSG) == 256
-struct COMM_MSG
-{
-	int  type;
-	char dummy[MSGSIZE];
-};
-
-// 접속 시 플레이어 키 발급
-struct PLAYERKEY_MSG
-{
-	int type;
-	int playerKey;
-	char dummy[BUFSIZE - 8];
-};
-
-// 이동 메시지
-struct MOVE_MSG
-{
-	int  type;
-	float xPos, yPos;
-	char dummy[BUFSIZE - 12];
-};
 
 
 //static u_short       g_port; // 서버 포트 번호

@@ -2,6 +2,7 @@
 
 extern CD3DApp* g_pApp;
 extern Scene* g_pNowOpened;
+
 extern volatile BOOL g_bStart;
 extern u_short g_port;
 extern HANDLE g_hClientThread;

@@ -171,6 +171,7 @@
     <ClInclude Include="Src\Enemy.h" />
     <ClInclude Include="Src\Hero.h" />
     <ClInclude Include="Src\IGameObject.h" />
+    <ClInclude Include="Src\Messages.h" />
     <ClInclude Include="Src\ResourceManager.h" />
     <ClInclude Include="Src\Scene.h" />
     <ClInclude Include="Src\Server.h" />

@@ -1,4 +1,5 @@
 #include "_StdAfx.h"
+#include "Messages.h"
 
 u_short       g_port; // 서버 포트 번호
 SOCKET        g_sock; // 클라이언트 소켓

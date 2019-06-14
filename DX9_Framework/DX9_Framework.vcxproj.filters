@@ -131,5 +131,8 @@
     <ClInclude Include="Src\Server.h">
       <Filter>Server</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Messages.h">
+      <Filter>Server</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
