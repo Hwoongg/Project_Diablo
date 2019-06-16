@@ -5,7 +5,12 @@ u_short       g_port; // 서버 포트 번호
 SOCKET        g_sock; // 클라이언트 소켓
 HANDLE        g_hClientThread; // 스레드 핸들
 volatile BOOL g_bStart; // 통신 시작 여부
+
+COMM_MSG g_commMsg;
 MOVE_MSG g_moveMsg;
+
+extern CD3DApp* g_pApp;
+extern Scene* g_pNowOpened;
 
 DWORD WINAPI ClientMain(LPVOID arg)
 {
@@ -102,7 +107,12 @@ DWORD WINAPI ReadThread(LPVOID arg)
 			break;
 		}
 
-		if (comm_msg.type == MOVING) {
+		if (comm_msg.type == MEMLIST)
+		{
+			g_commMsg = comm_msg;
+		}
+		else if (comm_msg.type == MOVING) 
+		{
 			move_msg = (MOVE_MSG *)&comm_msg;
 
 			// 캐릭터 식별자, 좌표값을 통해 이동처리
@@ -116,6 +126,15 @@ DWORD WINAPI ReadThread(LPVOID arg)
 
 			// 플레이어 식별자 입력
 			// ...
+		}
+		else if (comm_msg.type == ADDMEMBER) // 추가 접속 메시지가 들어온다면 현재 열려있는 씬에 추가.
+		{
+			// 중앙 좌표 생성.
+			D3DXVECTOR2 tempPos;
+			tempPos.x = g_pApp->m_dScnX / 2 - (g_pApp->GetrManager()->GetTexture(L"Texture/zerg.png")->GetImageWidth() *.2f / 2);
+			tempPos.y = g_pApp->m_dScnY / 2 - (g_pApp->GetrManager()->GetTexture(L"Texture/zerg.png")->GetImageWidth() *.2f / 2);
+			 
+			g_pNowOpened->AddObject(new Hero(L"Texture/zerg.png", tempPos));
 		}
 
 	}

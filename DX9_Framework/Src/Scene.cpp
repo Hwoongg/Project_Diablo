@@ -1,4 +1,5 @@
 #include "_StdAfx.h"
+#include "Messages.h"
 
 extern CD3DApp* g_pApp;
 extern Scene* g_pNowOpened;
@@ -6,6 +7,9 @@ extern Scene* g_pNowOpened;
 extern volatile BOOL g_bStart;
 extern u_short g_port;
 extern HANDLE g_hClientThread;
+
+extern SOCKET g_sock;
+extern COMM_MSG g_commMsg;
 
 Scene::Scene()
 {
@@ -46,11 +50,64 @@ void Scene::Command(CGameObject * pButton)
 
 MainScene::MainScene()
 {
+	COMM_MSG comm_msg;
+	FieldState* field;
+	comm_msg.type = MEMLIST;
+	g_commMsg.type = 0;
+
+	int retval;
+
+	// 서버에 멤버 리스트 요청.
+	retval = send(g_sock, (char*)&comm_msg, BUFSIZE, 0);
+	if (retval == SOCKET_ERROR)
+	{
+		err_quit("필드 정보를 요청하지 못했습니다");
+		return;
+	}
+	else
+	{
+		MessageBox(NULL, L"필드 정보 요청 완료.", L"성공!", MB_ICONINFORMATION);
+	}
+
+	// 정보가 들어올 때 까지 무한 대기
+	while (true)
+	{
+		if (g_commMsg.type == MEMLIST)
+		{
+			field = (FieldState*)&g_commMsg;
+			break;
+		}
+	}
+
+	
+
+	// 멤버 리스트에 맞춘 초기 생성 과정 필요.
+	// 현재 서버측에서 플레이어가 몇명인지만 전송.
+
 	D3DXVECTOR2 tempPos;
 	tempPos.x = 0.f;
 	tempPos.y = 0.f;
-	m_Hero = new Hero(L"Texture/zerg.png", tempPos);
-	AddObject(m_Hero);
+
+	for (int i = 0; i < field->Objects; i++)
+	{
+		m_Hero = new Hero(L"Texture/zerg.png", tempPos);
+		AddObject(m_Hero);
+
+		tempPos.x += 10.0f;
+	}
+
+	// 자신의 오브젝트 생성
+	/*m_Hero = new Hero(L"Texture/zerg.png", tempPos);
+	AddObject(m_Hero);*/
+
+	// 멤버 추가 알림.
+	comm_msg.type = ADDMEMBER;
+	retval = send(g_sock, (char*)&comm_msg, BUFSIZE, 0);
+
+
+
+	
+	
 
 	
 	// Enemy 생성부
@@ -75,6 +132,10 @@ MainScene::MainScene()
 
 void MainScene::Update(CInput * _Input, float _dTime)
 {
+
+	// 타 플레이어 입장 시 AddObject()
+	// ...
+
 	FrameMoveAllObject(_Input, _dTime);
 
 	// 충돌이 일어난 객체의 포인터 획득

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "Messages.h"
+#include "..\DX9_Framework\Src\Messages.h"
 
 #define SERVERPORT 9000
 
@@ -30,8 +30,14 @@ void RemoveSocketInfo(int nIndex);
 void err_quit(char *msg);
 void err_display(char *msg);
 
+FieldState g_fieldState;
+
+
 int main(int argc, char *argv[])
 {
+	g_fieldState.type = MEMLIST;
+	g_fieldState.Objects = 0;
+
 	int retval;
 
 	// 윈속 초기화
@@ -149,6 +155,31 @@ int main(int argc, char *argv[])
 					RemoveSocketInfo(i);
 					continue;
 				}
+
+				// //////////////////////////////////////////////////
+				//
+				// 메시지 타입 구분
+				//
+				// //////////////////////////////////////////////////
+
+				// 공용 메시지 형태로 형번환
+				COMM_MSG* tempMsg = (COMM_MSG*)ptr->buf;
+				
+				// 멤버 리스트 요청 시
+				if (tempMsg->type == MEMLIST)
+				{
+					retval = send(ptr->sock, (char*)&g_fieldState, BUFSIZE, 0);
+					continue;
+				}
+
+				// 멤버 추가 요청 시
+				if (tempMsg->type == ADDMEMBER)
+				{
+					g_fieldState.Objects++;
+				}
+
+				//
+				// ///////////////////////////////////////////////////
 
 				// 받은 바이트 수 누적
 				ptr->recvbytes += retval;

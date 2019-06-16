@@ -11,7 +11,7 @@ CObjectManager::~CObjectManager()
 
 }
 
-void CObjectManager::AddObject(ObjStatus _status, LPCWSTR sFile, float xpos, float ypos)
+void CObjectManager::AddObject(ObjectType _status, LPCWSTR sFile, float xpos, float ypos)
 {
 	D3DXVECTOR2 _pos = { xpos, ypos };
 	switch (_status)

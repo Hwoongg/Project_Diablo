@@ -22,7 +22,7 @@ public:
 	virtual ~CObjectManager();
 
 	// 팩토리 패턴 연구하며 만들었던 함수. 현재 피드백 내용 적용 된 두번째 함수 사용중
-	void AddObject(ObjStatus _status, LPCWSTR sFile, float xpos, float ypos);
+	void AddObject(ObjectType _status, LPCWSTR sFile, float xpos, float ypos);
 
 	// 피드백 내용 : 각자 오브젝트는 new를 통해 생성하고, 주소 반환하여 
 	// 매니저 에서는 주소만 받아 리스트에 추가하는 단순 작업만 하도록 한다.

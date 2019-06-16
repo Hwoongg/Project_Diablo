@@ -6,7 +6,7 @@
 // 게임의 오브젝트 속성에 대한 클래스.
 //
 
-enum ObjStatus // 매니저 클래스에서 유용하게 활용하는중
+enum ObjectType // 매니저 클래스에서 유용하게 활용하는중
 {
 	UNKNOWN,
 	HERO,
@@ -20,7 +20,7 @@ enum ObjStatus // 매니저 클래스에서 유용하게 활용하는중
 class CGameObject : public IGameObject
 {
 public:
-	ObjStatus m_Stat; // 해당 오브젝트의 속성
+	ObjectType m_Stat; // 해당 오브젝트의 속성
 
 protected:
 	CTexture* m_pObjTex; // 오브젝트 이미지 텍스쳐 포인터
