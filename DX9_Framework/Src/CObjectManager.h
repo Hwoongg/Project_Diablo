@@ -35,6 +35,7 @@ public:
 	//void ControlAllObject(CInput* _pInput); // 미구현. FrameMove에서 처리
 	void RenderAllObject(/*CSprite* _sprite*/);
 	void FrameMoveAllObject(CInput* _Input, float _dTime);
+	void SetTargetPosition(int _TargetKey, D3DXVECTOR2 _pos);
 	void RemoveAllObject();
 
 	CGameObject* Collision(CGameObject* pObject);

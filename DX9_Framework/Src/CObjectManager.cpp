@@ -81,6 +81,21 @@ void CObjectManager::FrameMoveAllObject(CInput* _pInput, float _dTime)
 	}
 }
 
+void CObjectManager::SetTargetPosition(int _TargetKey, D3DXVECTOR2 _pos)
+{
+	// 키값이 일치하는 오브젝트 탐색.
+	list<CGameObject*>::iterator TempItor;
+	for (TempItor = ObjList.begin(); TempItor != ObjList.end(); TempItor++)
+	{
+		if ((*TempItor)->ObjectKey == _TargetKey)
+		{
+			//(*TempItor)->Update(_pInput, _dTime);
+			(*TempItor)->SetPosition(_pos);
+			return;
+		}
+	}
+}
+
 void CObjectManager::RemoveAllObject()
 {
 	for (itor = ObjList.begin(); itor != ObjList.end();)

@@ -21,3 +21,5 @@ DWORD WINAPI WriteThread(LPVOID arg);
 void err_quit(char *msg);
 void err_display(char *msg);
 int recvn(SOCKET s, char *buf, int len, int flags);
+
+void SendMoveMSG(int _Key, D3DXVECTOR2 _pos);

@@ -5,12 +5,15 @@
 class Hero : public CGameObject
 {
 public:
+	bool isMine;
+
+public:
 	Hero();
-	Hero(LPCWSTR sFile, D3DXVECTOR2 _pos);
+	Hero(LPCWSTR sFile, D3DXVECTOR2 _pos, int _MyKey, int _objKey = -1);
 	virtual ~Hero();
 
 	// Hero의 텍스쳐를 입히고 생성
-	void Create(LPCWSTR sFile, D3DXVECTOR2 _pos);
+	void Create(LPCWSTR sFile, D3DXVECTOR2 _pos, int _objKey = -1);
 
 	// Hero의 자동 움직임
 	void Update(CInput*, float _dTime);

@@ -152,11 +152,11 @@ int CGame::Render()
 	//RECT rc;
 	//::SetRect(&rc, 0, 0, 400, 0 + 30/*폰트크기*/);
 	//m_pDXFont1->DrawText(NULL, m_fpsMessage, -1, &rc, 0, D3DXCOLOR(1, 1, 0, 1));
-	PutFPS();
+	//PutFPS();
 
 
 	// 마우스 좌표 정보 표시
-	RECT rt;
+	/*RECT rt;
 	::SetRect(&rt, 0, 30, 400, 30 + 30);
 	TCHAR iMsg[128];
 	if (m_pInput)
@@ -165,7 +165,7 @@ int CGame::Render()
 		swprintf(iMsg, L"Mouse X: %.f  Y: %.f  Z: %.f", vcMouse.x, vcMouse.y, vcMouse.z);
 
 		m_pDXFont1->DrawText(NULL, iMsg, -1, &rt, 0, D3DXCOLOR(1, 1, 0, 1));
-	}
+	}*/
 
 
 	// EndScene. 다 그렸다고 알려주는 함수

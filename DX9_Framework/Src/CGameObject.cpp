@@ -2,6 +2,8 @@
 
 extern CD3DApp* g_pApp;
 
+extern SOCKET g_sock;
+
 CGameObject::CGameObject()
 {
 	m_Stat = UNKNOWN;
@@ -31,8 +33,9 @@ CGameObject::~CGameObject()
 }
 
 
-void CGameObject::Create(/*CTexture* pTex*/LPCWSTR sFile, D3DXVECTOR2 _pos)
+void CGameObject::Create(/*CTexture* pTex*/LPCWSTR sFile, D3DXVECTOR2 _pos, int _objKey)
 {
+	ObjectKey = _objKey;
 	m_Pos = _pos; // 복사 가능?
 
 	//m_pObjTex = pTex; // 텍스쳐 포인터 연결
@@ -62,9 +65,11 @@ void CGameObject::Create(/*CTexture* pTex*/LPCWSTR sFile, D3DXVECTOR2 _pos)
 	m_Color = D3DXCOLOR(1, 1, 1, 1.0f);
 }
 
-// 대각선 자동 이동 움직임 구현된 상태
+
 void CGameObject::Update(CInput* pInput, float _dTime)
 {
+	D3DXVECTOR2 oldPos = m_Pos;
+
 	if (pInput->KeyPress(VK_LEFT))
 		m_Pos.x -= dx*_dTime;
 	else if (pInput->KeyPress(VK_RIGHT))
@@ -89,6 +94,13 @@ void CGameObject::Update(CInput* pInput, float _dTime)
 	if (m_Pos.y + m_ObjRt.bottom / 2 <0)
 	{
 		m_Pos.y = 0 - m_ObjRt.bottom / 2;
+	}
+
+	// 좌표 변동이 있다면
+	if (m_Pos != oldPos)
+	{
+		// 서버에 알린다.
+		SendMoveMSG(ObjectKey, m_Pos);
 	}
 
 }
@@ -128,3 +140,7 @@ BOOL CGameObject::IsIn(D3DXVECTOR3 mousePos)
 	return FALSE;
 }
 
+void CGameObject::SetPosition(D3DXVECTOR2 _pos)
+{
+	m_Pos = _pos;
+}

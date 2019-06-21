@@ -8,14 +8,23 @@ Hero::Hero()
 	dy = 400;
 }
 
-Hero::Hero(LPCWSTR sFile, D3DXVECTOR2 _pos)
+Hero::Hero(LPCWSTR sFile, D3DXVECTOR2 _pos, int _MyKey, int _objKey)
 {
 	//Hero();
 	m_Stat = HERO;
 	m_Scale = { .2f, .2f };
 	dx = 200;
 	dy = 400;
-	Create(sFile, _pos);
+	Create(sFile, _pos, _objKey);
+
+	if (_objKey == _MyKey)
+	{
+		isMine = true;
+	}
+	else
+	{
+		isMine = false;
+	}
 	
 	// 애니메이션 데이터 설정...
 	m_aniInfo.ImageWidth = m_TexRt.right;
@@ -36,13 +45,16 @@ Hero::Hero(LPCWSTR sFile, D3DXVECTOR2 _pos)
 	m_aniInfo.aniDuration = m_aniInfo.aniDelay;
 }
 
+
+
 Hero::~Hero()
 {
+
 }
 
-void Hero::Create(LPCWSTR sFile, D3DXVECTOR2 _pos)
+void Hero::Create(LPCWSTR sFile, D3DXVECTOR2 _pos, int _objKey)
 {
-	CGameObject::Create(sFile, _pos);
+	CGameObject::Create(sFile, _pos, _objKey);
 }
 
 void Hero::Update(CInput* _pInput, float _dTime)
@@ -71,7 +83,11 @@ void Hero::Update(CInput* _pInput, float _dTime)
 	//	m_Pos.y = 0 - m_ObjRt.bottom / 2;
 	//	dy = -dy;
 	//}
-	CGameObject::Update(_pInput, _dTime);
+
+	if (isMine)
+	{
+		CGameObject::Update(_pInput, _dTime);
+	}
 }
 
 void Hero::Draw(CSprite* pCSpr)

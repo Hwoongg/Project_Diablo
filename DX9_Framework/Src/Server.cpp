@@ -6,11 +6,14 @@ SOCKET        g_sock; // 클라이언트 소켓
 HANDLE        g_hClientThread; // 스레드 핸들
 volatile BOOL g_bStart; // 통신 시작 여부
 
-COMM_MSG g_commMsg;
+COMM_MSG g_commMsg; // 일회성 메시지 수신용.
+COMM_MSG g_fieldState;
 MOVE_MSG g_moveMsg;
 
 extern CD3DApp* g_pApp;
 extern Scene* g_pNowOpened;
+
+extern int g_MyPlayerKey;
 
 DWORD WINAPI ClientMain(LPVOID arg)
 {
@@ -99,6 +102,7 @@ DWORD WINAPI ReadThread(LPVOID arg)
 	COMM_MSG comm_msg;
 	MOVE_MSG *move_msg;
 	PLAYERKEY_MSG *playerkey_msg;
+	ADDMEMBER_MSG* addmem_Msg;
 
 	while (true)
 	{
@@ -107,34 +111,42 @@ DWORD WINAPI ReadThread(LPVOID arg)
 			break;
 		}
 
-		if (comm_msg.type == MEMLIST)
+		if (comm_msg.type == MEMLIST) // 멤버 리스트를 받았을 경우
 		{
-			g_commMsg = comm_msg;
+			// 멤버 리스트를 덮어쓴다.
+			g_fieldState = comm_msg;
 		}
-		else if (comm_msg.type == MOVING) 
+		else if (comm_msg.type == MOVING) // Move 메시지를 받았다면
 		{
 			move_msg = (MOVE_MSG *)&comm_msg;
 
 			// 캐릭터 식별자, 좌표값을 통해 이동처리
 			// 클라이언트의 모든 캐릭터 좌표를 갱신한다.
-			// ...
 
+			D3DXVECTOR2 newPos;
+			newPos.x = move_msg->MoveObj.xPos;
+			newPos.y = move_msg->MoveObj.yPos;
+			g_pNowOpened->SetTargetPosition(move_msg->MoveObj.Key, newPos);
 		}
-		else if (comm_msg.type == PLAYERKEY)
+		else if (comm_msg.type == PLAYERKEY) // 플레이어 키를 발급받았을 경우
 		{
 			playerkey_msg = (PLAYERKEY_MSG*)&comm_msg;
 
-			// 플레이어 식별자 입력
-			// ...
+			// 클라이언트에 발급받은 키를 등록!
+			g_MyPlayerKey = playerkey_msg->playerKey;
 		}
-		else if (comm_msg.type == ADDMEMBER) // 추가 접속 메시지가 들어온다면 현재 열려있는 씬에 추가.
+		else if (comm_msg.type == ADDMEMBER) // 멤버 추가 메시지를 받았다면 
 		{
-			// 중앙 좌표 생성.
+			addmem_Msg = (ADDMEMBER_MSG*)&comm_msg;
+
+			// 좌표를 읽고...
 			D3DXVECTOR2 tempPos;
-			tempPos.x = g_pApp->m_dScnX / 2 - (g_pApp->GetrManager()->GetTexture(L"Texture/zerg.png")->GetImageWidth() *.2f / 2);
-			tempPos.y = g_pApp->m_dScnY / 2 - (g_pApp->GetrManager()->GetTexture(L"Texture/zerg.png")->GetImageWidth() *.2f / 2);
-			 
-			g_pNowOpened->AddObject(new Hero(L"Texture/zerg.png", tempPos));
+			tempPos.x = addmem_Msg->AddObj.xPos;
+			tempPos.y = addmem_Msg->AddObj.yPos;
+
+			// 패킷에 포함된 플레이어 키를 읽어 멤버 생성!
+			g_pNowOpened->AddObject(new Hero(L"Texture/zerg.png", tempPos
+				,g_MyPlayerKey, addmem_Msg->AddObj.Key));
 		}
 
 	}
@@ -149,7 +161,7 @@ DWORD WINAPI WriteThread(LPVOID arg)
 	// 서버와 데이터 통신
 	while (1)
 	{
-		// 무브 메시지 통신에는 적합하지 않다.
+		// 무브 메시지를 매 프레임마다 뿌리는 것은 피하는게 좋을 듯.
 		/*retval = send(g_sock, (char *)&g_moveMsg, BUFSIZE, 0);
 		if (retval == SOCKET_ERROR) {
 			break;
@@ -177,4 +189,17 @@ int recvn(SOCKET s, char *buf, int len, int flags)
 	}
 
 	return (len - left);
+}
+
+void SendMoveMSG(int _Key, D3DXVECTOR2 _pos)
+{
+	MOVE_MSG move_msg;
+
+	move_msg.type = MOVING;
+	move_msg.MoveObj.Key = _Key;
+	move_msg.MoveObj.xPos = _pos.x;
+	move_msg.MoveObj.yPos = _pos.y;
+
+	int retval;
+	retval = send(g_sock, (char*)&move_msg, BUFSIZE, 0);
 }

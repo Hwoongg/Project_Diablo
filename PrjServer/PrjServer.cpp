@@ -36,7 +36,7 @@ FieldState g_fieldState;
 int main(int argc, char *argv[])
 {
 	g_fieldState.type = MEMLIST;
-	g_fieldState.Objects = 0;
+	g_fieldState.ObjAmount = 0;
 
 	int retval;
 
@@ -169,13 +169,57 @@ int main(int argc, char *argv[])
 				if (tempMsg->type == MEMLIST)
 				{
 					retval = send(ptr->sock, (char*)&g_fieldState, BUFSIZE, 0);
+
+					// 다른 사용자에겐 스킵
+					continue;
+				}
+
+				// 리스트 수신 성공을 알릴 시
+				if (tempMsg->type == LIST_OK)
+				{
+					// 발신용 구조체 생성
+					PLAYERKEY_MSG playerKey_msg;
+					playerKey_msg.type = PLAYERKEY;
+
+					// 키값 생성. 현재는 오브젝트 갯수 + 1 
+					playerKey_msg.playerKey = g_fieldState.ObjAmount + 1;
+
+					// 플레이어 키 전송
+					retval = send(ptr->sock, (char*)&playerKey_msg, BUFSIZE, 0);
+					
+					// 다른 사용자에겐 스킵
 					continue;
 				}
 
 				// 멤버 추가 요청 시
 				if (tempMsg->type == ADDMEMBER)
 				{
-					g_fieldState.Objects++;
+					// ADDMEM_MSG형으로 변환
+					ADDMEMBER_MSG* addmem_Msg = (ADDMEMBER_MSG*)tempMsg;
+
+					// 추출된 데이터를 현재 필드 상태에 추가
+					g_fieldState.fieldObjects[g_fieldState.ObjAmount] =
+						addmem_Msg->AddObj;
+
+					// 필드 멤버 수 상승
+					g_fieldState.ObjAmount++;
+
+					// ADDMEMBER 메시지를 Notify 하게된다.
+				}
+
+				if (tempMsg->type == MOVING)
+				{
+					MOVE_MSG* move_Msg = (MOVE_MSG*)tempMsg;
+					int UpdateTarget = move_Msg->MoveObj.Key;
+
+					for (int i = 0; i < g_fieldState.ObjAmount; i++)
+					{
+						if (g_fieldState.fieldObjects[i].Key == UpdateTarget)
+						{
+							g_fieldState.fieldObjects[i].xPos = move_Msg->MoveObj.xPos;
+							g_fieldState.fieldObjects[i].yPos = move_Msg->MoveObj.yPos;
+						}
+					}
 				}
 
 				//

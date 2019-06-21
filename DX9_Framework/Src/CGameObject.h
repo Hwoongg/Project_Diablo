@@ -21,6 +21,7 @@ class CGameObject : public IGameObject
 {
 public:
 	ObjectType m_Stat; // 해당 오브젝트의 속성
+	int ObjectKey;
 
 protected:
 	CTexture* m_pObjTex; // 오브젝트 이미지 텍스쳐 포인터
@@ -50,10 +51,12 @@ public:
 	virtual ~CGameObject();
 
 	// 파일명, 좌표 매개변수로 하도록
-	void Create(LPCWSTR sFile, D3DXVECTOR2 _pos);
+	void Create(LPCWSTR sFile, D3DXVECTOR2 _pos, int _objKey = -1);
 
 	// 기본 갱신상태. 키 입력 따라 좌표를 이동한다.
 	void Update(CInput*, float _dTime);
+
+	void SetPosition(D3DXVECTOR2 _pos);
 
 	//스프라이트 클래스의 도움을 받아 그린다
 	void Draw(/*CSprite* pCSpr*/);

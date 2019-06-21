@@ -9,7 +9,12 @@ extern u_short g_port;
 extern HANDLE g_hClientThread;
 
 extern SOCKET g_sock;
+
 extern COMM_MSG g_commMsg;
+extern COMM_MSG g_fieldState;
+
+
+int g_MyPlayerKey;
 
 Scene::Scene()
 {
@@ -50,14 +55,19 @@ void Scene::Command(CGameObject * pButton)
 
 MainScene::MainScene()
 {
-	COMM_MSG comm_msg;
+	COMM_MSG comm_msg; // 발신전용 더미
+
 	FieldState* field;
-	comm_msg.type = MEMLIST;
-	g_commMsg.type = 0;
+	ADDMEMBER_MSG addmem_msg;
+
+	g_fieldState.type = 0;
 
 	int retval;
 
+	g_MyPlayerKey = -1;
+
 	// 서버에 멤버 리스트 요청.
+	comm_msg.type = MEMLIST;
 	retval = send(g_sock, (char*)&comm_msg, BUFSIZE, 0);
 	if (retval == SOCKET_ERROR)
 	{
@@ -72,37 +82,70 @@ MainScene::MainScene()
 	// 정보가 들어올 때 까지 무한 대기
 	while (true)
 	{
-		if (g_commMsg.type == MEMLIST)
+		// 멤버 리스트 정보가 들어오면...
+		if (g_fieldState.type == MEMLIST)
 		{
-			field = (FieldState*)&g_commMsg;
+			// 받은 정보를 저장한 뒤...
+			field = (FieldState*)&g_fieldState;
+
+			// 서버에 수신 성공을 알린다!
+			comm_msg.type = LIST_OK;
+			send(g_sock, (char*)&comm_msg, BUFSIZE, 0);
+
 			break;
 		}
 	}
 
-	
+	// 수신 성공을 알리면 서버측에서 플레이어 코드를 답신으로 줄 것.
+	while (true)
+	{
+		// 키를 발급받을때까지 무한 대기.
+		if (g_MyPlayerKey != -1)
+			break;
+	}
 
+	// 모든 수신에 성공했다면
 	// 멤버 리스트에 맞춘 초기 생성 과정 필요.
-	// 현재 서버측에서 플레이어가 몇명인지만 전송.
-
+	// 현재 서버측에서 플레이어가 몇명인지만 전송받아 개수만큼 생성.
 	D3DXVECTOR2 tempPos;
 	tempPos.x = 0.f;
 	tempPos.y = 0.f;
 
-	for (int i = 0; i < field->Objects; i++)
+	// 필드의 오브젝트들 정보를 읽어 생성 시작
+	for (int i = 0; i < field->ObjAmount; i++)
 	{
-		m_Hero = new Hero(L"Texture/zerg.png", tempPos);
-		AddObject(m_Hero);
+		// Position
+		tempPos.x = field->fieldObjects[i].xPos;
+		tempPos.y = field->fieldObjects[i].yPos;
 
-		tempPos.x += 10.0f;
+		// 생성자에 Key를 포함해서 던진다.
+		m_Hero = new Hero(L"Texture/zerg.png", tempPos, 
+			g_MyPlayerKey, field->fieldObjects[i].Key);
+		AddObject(m_Hero);
 	}
+
+
+
 
 	// 자신의 오브젝트 생성
 	/*m_Hero = new Hero(L"Texture/zerg.png", tempPos);
 	AddObject(m_Hero);*/
 
-	// 멤버 추가 알림.
-	comm_msg.type = ADDMEMBER;
-	retval = send(g_sock, (char*)&comm_msg, BUFSIZE, 0);
+	//comm_msg.type = ADDMEMBER; // 메시지 타입 세팅
+	//retval = send(g_sock, (char*)&comm_msg, BUFSIZE, 0);
+
+	addmem_msg.type = ADDMEMBER;
+	// 추가될 멤버의 키값, 좌표 세팅
+	addmem_msg.AddObj.Key = g_MyPlayerKey;
+
+	tempPos.x = g_pApp->m_dScnX / 2 - (g_pApp->GetrManager()->GetTexture(L"Texture/zerg.png")->GetImageWidth() *.2f / 2);
+	tempPos.y = g_pApp->m_dScnY / 2 - (g_pApp->GetrManager()->GetTexture(L"Texture/zerg.png")->GetImageWidth() *.2f / 2);
+	addmem_msg.AddObj.xPos = tempPos.x;
+	addmem_msg.AddObj.yPos = tempPos.y;
+
+	// 자신을 추가해달라고 요청한다.
+	retval = send(g_sock, (char*)&addmem_msg, BUFSIZE, 0);
+	
 
 
 
@@ -133,8 +176,6 @@ MainScene::MainScene()
 void MainScene::Update(CInput * _Input, float _dTime)
 {
 
-	// 타 플레이어 입장 시 AddObject()
-	// ...
 
 	FrameMoveAllObject(_Input, _dTime);
 
